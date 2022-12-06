@@ -1,0 +1,83 @@
+<div class="container">
+
+    <div *ngIf="mostrarDetalle !='SI'">    
+        <h2 class="mt-2">Consultar pedido </h2>
+        <form name="FormBusqueda" [formGroup]='FormBusqueda' class="bg-light mt-2" >
+            <div class="form-group row">
+                <label class="col-form-label col-sm-12">
+                    Numero documento cliente o Numero pedido:
+                </label>
+                <div class="col-sm-3">
+                <input type="text" name="NumeroDocOPedido" class="form-control" formControlName="NumeroDocOPedido" maxlength="50" placeholder="Buscar pedido " (keyup.enter)=" buscarPedidosFiltro()" (keyup)=" buscarPedidosFiltro()" />
+                </div>
+            </div>
+                <!-- Botones -->
+                <div class="row justify-content-center">
+                    <div class="col-sm-0 mt-2 ">
+                        <button type="button" class="btn btn-primary col-sm-3 " (click)="buscarPedidosFiltro()">
+                            <i class="fa fa-search"> </i> Buscar
+                        </button>
+                    </div> 
+                </div>
+            
+                <!-- <div class="alert alert-danger" *ngIf="MostrarSinResul !='NO' && accionABMC =='L'">
+                    <p>No se encontro articulo con ese nombre</p>
+                </div> -->
+        </form>
+    </div>
+
+    <table class="table table-dark table-hover" style="margin-top: 20px;" *ngIf="mostrarTablaPedido =='SI'">
+        <thead>
+            <tr> 
+               
+              <th class="text-center">Numero pedido</th>
+              <th>Documento cliente</th>          
+              <th>Fecha</th>
+              <th class="text-center">Total</th>
+              <th>Forma pago</th>
+              <th>Ver detalle</th>
+          </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of ListaPedidos">
+            <td class="text-right">{{item.numeroPedido}}</td>
+            <td class="text-right">{{item.cliente}}</td>  
+            <td class="text-right">{{item.fechaPedido |date:'dd/MM/yyyy'}}</td>  
+            <td class="text-right">${{item.total}}</td>  
+            <td class="text-right">{{item.formaPago == 1 ? 'Efectivo' : 'Mercado Pago'}} </td>  
+            <td>              
+            <button type="button" class="btn btn-sm btn-outline-primary" title="Modificar" (click)="buscarDetalle(item)" >
+              <i class="fa fa-pencil">Ver detalle</i>
+            </button>
+            </td>
+        </tr>
+      </tbody>
+    </table>
+
+
+    <!-- <div *ngIf="mostrarDetalle =='SI'" class="mt-3">
+        <h3>Pedido número {{pedidoSeleccionado?.numeroPedido}}</h3>
+        <ul class="border border-primary" *ngFor="let item of ListaDetalle" >
+            <article >
+            <h4>DETALLE PEDIDO NUMERO : {{item.idArticulo}}</h4>
+            </article>
+            <p>Precio: ${{item.precioVenta}}</p>
+            <p>Cantidad: {{item.cantidad}}</p>
+            <p>Subtotal: ${{item.cantidad * item.precioVenta}}</p>
+        </ul>
+    </div> -->
+
+    <div *ngIf="mostrarDetalle =='SI'">
+        <h3>Pedido número {{pedidoSeleccionado?.numeroPedido}}</h3>
+        <div *ngFor="let item of ListaDetalle" >
+            <div class="card text-white bg-success mb-3 col-sm-12" style="max-width: 18rem;" >
+                <div class="card-header">Articulo : {{item.idArticulo}}</div>
+                <div class="card-body">
+                <p class="card-text">Cantidad: {{item.cantidad}}</p>
+                <p class="card-text">Precio: {{item.precioVenta}}</p>
+                <h5 class="card-title">Subtotal: ${{item.cantidad * item.precioVenta}}</h5>
+                </div>
+            </div>
+        </div>  
+    </div>    
+</div>

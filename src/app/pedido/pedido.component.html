@@ -1,0 +1,202 @@
+
+  
+
+<div class= "container"  >
+<h2>{{Titulo}}</h2>
+
+
+<form name="FormBusqueda" [formGroup]='FormBusquedaCliente' class="bg-light "  >
+  <div >
+  <h4>Cliente</h4>
+  <div class="form-group row">
+    <label class="col-form-label col-sm-2 offset-sm" >
+            Nombre o apellido:
+        </label>
+        <div class="col-sm-3 ">
+        <input type="text" name="Nombre" class="form-control" formControlName="Nombre" maxlength="50" placeholder="Buscar cliente" (keyup)="buscarClientes();" (keyup.enter)="buscarClientes()" />
+          </div>
+    </div>
+
+    <!--<div>
+
+    <div class="mt-2 mb-2"> 
+      <button type="button" class="btn btn-secondary btn-sm" >Ver detalle</button>
+    </div>
+    </div>-->    
+  </div>
+  
+  <div class="alert alert-danger" *ngIf="MostrarSinResulCliente !='NO'">
+    <p>No se encontro cliente con ese nombre</p>
+  </div>
+  </form>
+
+  <table class="table table-bordered table-striped" style="margin-top: 20px;" *ngIf="MostrarTablaClientes =='SI'">
+    <thead>
+        <tr> 
+
+          <th class="text-center">Numero Documento</th>
+          <th class="text-center">Nombre</th>
+          <th>Apelido</th>
+          <th>Fecha Nac</th>
+          <th>Calle</th>
+          <th>Nro Calle</th>
+          <th></th>
+          <!--<th class="text-center">Stock</th>
+          <th class="text-center">Fecha de Alta</th> -->
+      </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let item of ListaClientesFiltrados">
+
+          <!--<td class="text-right">{{item.descripcion}}</td>-->
+        <td class="text-right">{{item.NumeroDoc}}</td>
+        <td class="text-right">{{item.Nombres}}</td>   
+        <td class="text-right">{{item.Apellido}}</td>  
+        <td class="text-right">{{item.FechaNac | date:'yyyy/MM/dd'}}</td>  
+        <td class="text-right">{{item.Calle}}</td>  
+        <td class="text-right">{{item.Calle_nro}}</td> 
+        <td>              <button type="button" class="btn btn-sm btn-outline-primary" title="Modificar" (click)="agregarCliente(item)">
+          <i class="fa fa-pencil">Elegir</i>
+        </button>
+        </td> 
+        <!--<td class="text-right">{{item.stockActuak}}</td>
+        <td class="text-right">{{item.fechaAlta | date:'yyyy/MM/dd'}}</td>-->
+    </tr>
+      
+  </tbody>
+</table>
+
+<ul *ngIf="ClienteSeleccionado != null" class="mt-4">
+  <li>{{ClienteSeleccionado.Nombres}} {{ClienteSeleccionado.Apellido}} , DNI: {{ClienteSeleccionado.NumeroDoc}}</li>
+</ul>
+
+
+
+
+
+<form name="FormBusqueda" [formGroup]='FormBusqueda' class="bg-light mt-4 " >
+  <div >
+  <h4>Articulos</h4>
+  <div class="form-group row">
+    <label class="col-form-label col-sm-1 offset-sm" >
+            Nombre:
+        </label>
+        <div class="col-sm-3">
+        <input type="text" name="Nombre" class="form-control" formControlName="Nombre" maxlength="50" placeholder="Buscar Articulos" (keyup)="buscar()" (keyup.enter)="buscar()"/>
+          </div>
+    </div>
+
+    <!--<div>
+      <button class="btn btn-primary col-sm-2 " style="margin-left: 0px;" (click)="buscar()">
+            <i class="fa fa-search"> </i> Buscar
+        </button>
+        &nbsp;
+
+    </div>-->
+    <div class="mt-2 mb-2"> 
+      <button type="button" class="btn btn-secondary btn-sm" (click)="MostrarTablaDetalle()">Ver detalle</button>
+    </div>
+  
+    </div>
+    <div class="alert alert-danger" *ngIf="MostrarSinResulArticulos !='NO'">
+      <p>No se encontro articulo con ese nombre</p>
+    </div>
+  </form>
+
+
+  
+  
+  <table class="table table-bordered table-striped" style="margin-top: 20px;" *ngIf="MostrarTabla =='SI'">
+      <thead>
+          <tr> 
+             <!--<th class="text-center">Descripcion</th>-->
+            <th class="text-center">Nombre</th>
+            <th>Cantidad(se muestra Stock maximo)</th>
+            <th class="text-center">Precio unitario</th>
+            <th>Pedilo</th>
+            <!--<th class="text-center">Stock</th>
+            <th class="text-center">Fecha de Alta</th> -->
+        </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of ListaArtFiltrados">
+
+            <!--<td class="text-right">{{item.descripcion}}</td>-->
+          <td class="text-right">{{item.nombre}}</td>
+          <td>
+            <input type="number" id="cant" name="points" min="1" max="{{item.stockActuak}}" value="{{item.stockActuak}}" #cantidadPedida (click)="subTotal(cantidadPedida.value,item)" (keyup.enter)="subTotal(cantidadPedida.value,item)" >
+          </td>
+          <td class="text-right">${{item.precioLista}}</td>   
+          <td>              <button type="button" class="btn btn-sm btn-outline-primary" title="Modificar" (click)="AgregarAlDetalle(item,cantidadPedida.value)">
+            <i class="fa fa-pencil">Agregar</i>
+          </button>
+          </td>
+          <!--<td class="text-right">{{item.stockActuak}}</td>
+          <td class="text-right">{{item.fechaAlta | date:'yyyy/MM/dd'}}</td>-->
+      </tr>
+        
+    </tbody>
+  </table>
+
+
+
+  <h4 *ngIf="MostrarDetalle=='SI'">Detalle Pedido</h4>
+
+
+  <table class="table table-bordered table-striped" style="margin-top: 20px;" *ngIf="MostrarDetalle =='SI'">
+    <thead>
+        <tr> 
+           <!--<th class="text-center">Descripcion</th>-->
+          <th class="text-center">Id Articulo</th>
+          <th>Precio</th>
+          <th class="text-center">Cantidad </th>
+          <th class="text-center">Subtotal </th>
+          <th class="text-center">Borrar</th>
+          <!--<th class="text-center">Stock</th>
+          <th class="text-center">Fecha de Alta</th> -->
+      </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let item of ListaDetalles">
+
+          <!--<td class="text-right">{{item.descripcion}}</td>-->
+        <td class="text-right">{{item.idArticulo}}</td>
+        <td class="text-right">${{item.precioVenta}}</td>  
+        <td class="text-right">{{item.cantidad}}</td> 
+        <td class="text-right">${{item.cantidad * item.precioVenta}}</td>  
+        <td>
+          <button type="button" class="btn btn-danger" title="Modificar" (click)="BorrarDetalle(item)" >
+            <i class="fa fa-pencil">Borrar</i>
+          </button>
+        </td>
+        <!--<td class="text-right">{{item.stockActuak}}</td>
+        <td class="text-right">{{item.fechaAlta | date:'yyyy/MM/dd'}}</td>-->
+    </tr>
+      
+  </tbody>
+</table>
+    <div class="alert alert-danger" *ngIf="MostrarDetalle!='NO' && MostrarSinResulDetalle !='NO' ">
+      <p>No hay articulos seleccionados</p>
+    </div>
+
+<h3 style="color:red" *ngIf="MostrarDetalle =='SI'">TOTAL PEDIDO:${{Total}}</h3>
+
+
+<form name="FormBusqueda"class="bg-light mt-4 mb-4" >
+  <div>
+  <h4>Forma Pago</h4>
+  <div class="form-group row">
+    <select class="col-sm-6" id="combo" (change)="onFormaPagoTraer($event)">
+      <option hidden  selected>Selecciona una forma de pago</option>
+      <option *ngFor="let fp of FormasDePago"  > {{fp.Nombre}}</option>
+    </select>
+  </div>
+    </div>
+  </form>
+
+  <button type="button" class="btn btn-primary btn-lg " (click)="registrarPedido()">REGISTRAR PEDIDO</button>
+</div>
+
+
+
+
